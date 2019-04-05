@@ -1,5 +1,6 @@
 # script for starting Dyscorpia: Evolving Anatomies House Sounds
 
-chuck -c8 house_clock.ck:.05:m house_fabrics.ck:.05:m dripscans.ck:.05:m squeaks.ck:.05:m &
+chuck --bufsize:1024 -c8 house_clock.ck:.05:m house_fabrics.ck:.05:m dripscans.ck:.05:m 
+squeaks.ck:.05:m &
  
 

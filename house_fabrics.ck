@@ -26,7 +26,7 @@
 // init reverb mix
 .01 => float verb;
 // size of freq ridge (deviation, or drift)
-.001 => float devi;
+.0001 => float devi;
 // time between freq mods
 30 => int ridgeSize;
 
