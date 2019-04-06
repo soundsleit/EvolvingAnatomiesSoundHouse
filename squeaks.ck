@@ -8,6 +8,13 @@
 //the initial volume
 .05=>float initVolume;
 
+//check for command line arguments and if found, set appropriate vars
+if (me.args() > 0)
+{
+    Std.atof(me.arg(0)) => initVolume;
+    Std.atoi(me.arg(1)) => offset;
+}
+
 //how many channels
 4 => int audioChannels;
 

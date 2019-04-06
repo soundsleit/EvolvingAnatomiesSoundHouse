@@ -8,7 +8,12 @@
 //the initial volume
 .05=>float initVolume;
 
-
+//check for command line arguments and if found, set appropriate vars
+if (me.args() > 0)
+{
+    Std.atof(me.arg(0)) => initVolume;
+    Std.atoi(me.arg(1)) => offset;
+}
 
 15=>int bellMaxVoices;
 8=>int potMaxVoices;
@@ -64,13 +69,13 @@ for (0=>int i; i<potMaxVoices; i++)
 
 
 //trigger the pot sequence every seconds
-spork ~ PotsSequenceTrigger(20);
+spork ~ PotsSequenceTrigger(30);
 
 //trigger the chimes every 10 seconds (don't go shorter!)
-spork ~ ChimesSequenceTrigger(10);
+spork ~ ChimesSequenceTrigger(20);
 
 //ambiences on the minute
-spork ~ AmbTrigger(150);
+spork ~ AmbTrigger(360);
 
 1::week =>now;
 
@@ -98,11 +103,17 @@ fun void PotsSequenceTrigger(int _interval)
 
 fun void ChimesSequenceTrigger(int _interval)
 {
-    0=>int inc;
+    0 => int _inc;
+    5 => int _max;
     while (true)
     {
-        spork ~ ChimesSequence(Math.random2(1,15),Math.random2(50,1000),inc%2);
+        Math.random2(1,_max) => int _maxRnd;
+        spork ~ ChimesSequence(_maxRnd,Math.random2(50,_interval/_maxRnd*1000));
         _interval::second => now;
+        
+        //after so many times through, increment the max
+        if (_inc++ % 10 == 0) _max++;
+        if (_max>55) 55=>_max;
     }
     
 }
@@ -112,43 +123,28 @@ fun void ChimesSequenceTrigger(int _interval)
 //ChimesSequence
 //Creates a chime at regular intervals for a set amount of repetitions, setable timing and
 //other things
-fun void ChimesSequence(int _chimes, int _timeChunk, int _groupOffset)
+fun void ChimesSequence(int _chimes, int _timeChunk)
 {
     19 => int maxBellSounds;
-    1 => int random;
     
-    if (_groupOffset == 1) bell.cap()/2=>_groupOffset;
-    
-    //setup files (randomized or in order)
-    if (!random)
-    {
-        
-        for (0=>int i; i<_chimes; i++)
-        {
-            "snd/bells-single/bell_" + i + ".wav" =>bell[i+_groupOffset].read;
-        }
-    }
-    
-    if (random)
-    {
-        
-        for (0=>int i; i<_chimes; i++)
-        {
-            "snd/bells-single/bell_" + Math.random2(0,maxBellSounds-1) + ".wav" => bell[i+_groupOffset].read;
-        }
-    }
-    
+    //assign files randomly to different bell voices
     for (0=>int i; i<_chimes; i++)
     {
-        0=>bell[(i%bellMaxVoices)+_groupOffset].rate;
+        "snd/bells-single/bell_" + Math.random2(0,maxBellSounds-1) + ".wav" => bell[i%bellMaxVoices].read;
+    }
+    
+    //set rate of all to 0 (stop) for moment
+    for (0=>int i; i<_chimes; i++)
+    {
+        0=>bell[(i%bellMaxVoices)].rate;
     }
     
     //step through the bell sequence
     for (0=>int i; i<_chimes; i++)
     {
         //make sure that i wraps around if it's bigger than the max
-        0=>bell[(i%bellMaxVoices)+_groupOffset].pos;
-        1=>bell[(i%bellMaxVoices)+_groupOffset].rate;
+        0=>bell[(i%bellMaxVoices)].pos;
+        1=>bell[(i%bellMaxVoices)].rate;
         _timeChunk::ms => now;
     }
     

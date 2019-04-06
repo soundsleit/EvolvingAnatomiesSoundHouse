@@ -9,6 +9,13 @@
 //the initial volume
 .05=>float initVolume;
 
+//check for command line arguments and if found, set appropriate vars
+if (me.args() > 0)
+{
+    Std.atof(me.arg(0)) => initVolume;
+    Std.atoi(me.arg(1)) => offset;
+}
+
 // channels
 4 => int audioChannels;
 4 => int voices;
@@ -282,9 +289,17 @@ for (0 => int i; i < voices; i++)
                 for (0 => int j; j < voices; j ++)
                 {
                     for (0 => int k; k < partials; k++)
+                    {
                         //add little bits to the freq - brownian-like
                         s[j][k].freq() + Std.rand2f(-devi * (k + 1), devi * (k + 1)) 
                         => s[j][k].freq;
+                        
+                        //constrain (so it doesn't blow up if it's on all day)
+                        if (s[j][k].freq() > 8000) 8000=>s[j][k].freq;
+                        if (s[j][k].freq() < 40) 40=>s[j][k].freq;
+
+                    }
+                    
                 }
                 //how long between drifts
                 ridgeSize * Std.rand2f(0.9, 1.1)::ms => now;
