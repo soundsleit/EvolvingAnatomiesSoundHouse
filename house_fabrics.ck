@@ -26,7 +26,7 @@ if (me.args() > 0)
 //2474/16. => float baseFundamental;
 
 //YES
-167 => float baseFundamental;
+Std.mtof(51) => float baseFundamental;
 2 => float baseFactor;
 3 => int bases;
 5 => int baseStep;
@@ -315,7 +315,7 @@ for (0 => int i; i < voices; i++)
             while (true)
             {
                 devi + .00001 => devi;
-                1::second => now;
+                10::second => now;
             }
         }
         
