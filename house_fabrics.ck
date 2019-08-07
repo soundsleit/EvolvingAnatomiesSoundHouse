@@ -3,6 +3,8 @@
 // for Dyscorpia: Evolving Anatomies Sound House
 // Dec. 2018 - Feb. 2019 by (cc) Scott Smallwood
 
+//time
+10.0 => float minutes;
 
 // stupid MOTU offset
 2=>int offset;
@@ -32,10 +34,12 @@ Std.mtof(51) => float baseFundamental;
 5 => int baseStep;
 // init reverb mix
 .01 => float verb;
+
 // size of freq ridge (deviation, or drift)
-.0001 => float devi;
+.001 => float devi;
+
 // time between freq mods
-30 => int ridgeSize;
+minutes / 100.0 => float ridgeSize;
 
 
 // total pitches

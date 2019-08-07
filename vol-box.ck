@@ -22,6 +22,7 @@ for(0=>int i; i < list.cap(); i++)
     { 
         //and assign the device number
         i => device;
+        break;
     }
     else 
         -1 => device;
