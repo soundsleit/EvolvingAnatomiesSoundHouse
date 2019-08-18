@@ -6,6 +6,9 @@
 // stupid MOTU offset
 2=>int offset;
 
+//how many files are there to choose from?
+16=>int fileMax;
+
 //how many channels
 4 => int audioChannels;
 //the initial volume
@@ -45,7 +48,7 @@ while (true)
 fun void QuadPanner(dur _len)
 {
     //determine soundfile, and set position randomly
-    "snd/dripscans/snd" + Math.random2(0,12) + ".wav" => s.read;
+    "snd/dripscans/snd" + Math.random2(0,fileMax-1) + ".wav" => s.read;
     Math.random2(0,s.samples()-1) => s.pos;
     
     //time accumulator
